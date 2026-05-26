@@ -3,46 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COS340 - Website bán hàng</title>
+    <title>ShopManager - Quản lý cửa hàng</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="<?php echo url('public/assets/style.css'); ?>" rel="stylesheet">
 </head>
 
 <body>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3 col-lg-2 sidebar">
-            <div class="mb-4">
-                <h3 class="brand mb-1">
-                    <i class="bi bi-shop-window"></i> COS340
-                </h3>
-                <p class="brand-sub mb-0">PHP MVC + MySQL</p>
-            </div>
 
-            <nav>
-                <a href="<?php echo url(''); ?>" class="nav-btn">
-                    <i class="bi bi-house-door"></i> Trang chủ
-                </a>
+<!-- Top Navigation Bar -->
+<header class="top-navbar">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <a href="<?php echo url(''); ?>" class="navbar-brand">
+            <i class="bi bi-lightning-charge-fill"></i> ShopManager
+        </a>
 
-                <a href="<?php echo url('Product'); ?>" class="nav-btn">
-                    <i class="bi bi-box-seam"></i> Sản phẩm
-                </a>
+        <nav>
+            <ul class="navbar-nav">
+                <li>
+                    <a href="<?php echo url(''); ?>" class="nav-link">
+                        <i class="bi bi-grid-1x2"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo url('Product'); ?>" class="nav-link">
+                        <i class="bi bi-bag"></i> San pham
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo url('Product/add'); ?>" class="nav-link">
+                        <i class="bi bi-plus-square"></i> Them SP
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo url('Category'); ?>" class="nav-link">
+                        <i class="bi bi-bookmark"></i> Danh muc
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo url('Category/add'); ?>" class="nav-link">
+                        <i class="bi bi-bookmark-plus"></i> Them DM
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
-                <a href="<?php echo url('Product/add'); ?>" class="nav-btn">
-                    <i class="bi bi-plus-circle"></i> Thêm sản phẩm
-                </a>
-
-                <a href="<?php echo url('Category'); ?>" class="nav-btn">
-                    <i class="bi bi-tags"></i> Danh mục
-                </a>
-
-                <a href="<?php echo url('Category/add'); ?>" class="nav-btn">
-                    <i class="bi bi-folder-plus"></i> Thêm danh mục
-                </a>
-            </nav>
-        </div>
-
-        <main class="col-md-9 col-lg-10 p-4 p-lg-5">
+<!-- Main Content -->
+<div class="content-wrapper">

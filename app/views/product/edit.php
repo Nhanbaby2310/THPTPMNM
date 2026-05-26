@@ -1,21 +1,23 @@
 <?php include 'app/views/shares/header.php'; ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<!-- Page Header -->
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3">
     <div>
-        <h1 class="fw-bold page-title">Sửa sản phẩm</h1>
-        <p class="text-white-50 mb-0">Cập nhật thông tin sản phẩm trong database.</p>
+        <h1>Cap nhat san pham</h1>
+        <p>Chinh sua thong tin san pham #<?php echo $product->id; ?></p>
     </div>
 
-    <a href="<?php echo url('Product'); ?>" class="btn btn-outline-light rounded-pill px-4">
-        <i class="bi bi-arrow-left"></i> Quay lại
+    <a href="<?php echo url('Product'); ?>" class="btn-secondary-custom">
+        <i class="bi bi-arrow-left"></i> Quay lai danh sach
     </a>
 </div>
 
-<div class="main-card p-4 p-lg-5">
+<!-- Form -->
+<div class="form-modern">
     <?php if (!empty($errors)) : ?>
-        <div class="alert alert-danger rounded-4">
-            <strong>Có lỗi xảy ra:</strong>
-            <ul class="mb-0 mt-2">
+        <div class="alert-modern error">
+            <strong><i class="bi bi-exclamation-triangle"></i> Co loi xay ra:</strong>
+            <ul style="margin: 0.5rem 0 0 1.2rem; padding: 0;">
                 <?php foreach ($errors as $error) : ?>
                     <li><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></li>
                 <?php endforeach; ?>
@@ -26,57 +28,29 @@
     <form method="POST" action="<?php echo url('Product/update'); ?>" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<?php echo $product->id; ?>">
 
-        <div class="mb-4">
-            <label for="name" class="form-label fw-semibold">
-                <i class="bi bi-tag"></i> Tên sản phẩm
-            </label>
-
-            <input type="text"
-                   class="form-control form-control-lg rounded-4"
-                   id="name"
-                   name="name"
-                   value="<?php echo htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8'); ?>"
-                   required>
+        <div class="form-group-modern">
+            <label><i class="bi bi-type"></i> Ten san pham</label>
+            <input type="text" class="form-input" name="name"
+                   value="<?php echo htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8'); ?>" required>
         </div>
 
-        <div class="mb-4">
-            <label for="description" class="form-label fw-semibold">
-                <i class="bi bi-card-text"></i> Mô tả
-            </label>
-
-            <textarea class="form-control rounded-4"
-                      id="description"
-                      name="description"
-                      rows="5"
+        <div class="form-group-modern">
+            <label><i class="bi bi-text-paragraph"></i> Mo ta</label>
+            <textarea class="form-input" name="description" rows="4"
                       required><?php echo htmlspecialchars($product->description, ENT_QUOTES, 'UTF-8'); ?></textarea>
         </div>
 
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <label for="price" class="form-label fw-semibold">
-                    <i class="bi bi-cash-stack"></i> Giá
-                </label>
-
-                <div class="input-group input-group-lg">
-                    <input type="number"
-                           class="form-control rounded-start-4"
-                           id="price"
-                           name="price"
-                           step="0.01"
-                           value="<?php echo htmlspecialchars($product->price, ENT_QUOTES, 'UTF-8'); ?>"
-                           required>
-                    <span class="input-group-text rounded-end-4">VNĐ</span>
-                </div>
+        <div class="form-row">
+            <div class="form-group-modern">
+                <label><i class="bi bi-currency-dollar"></i> Gia ban (VND)</label>
+                <input type="number" class="form-input" name="price" step="0.01"
+                       value="<?php echo htmlspecialchars($product->price, ENT_QUOTES, 'UTF-8'); ?>" required>
             </div>
 
-            <div class="col-md-6 mb-4">
-                <label for="category_id" class="form-label fw-semibold">
-                    <i class="bi bi-tags"></i> Danh mục
-                </label>
-
-                <select class="form-select form-select-lg rounded-4" id="category_id" name="category_id" required>
-                    <option value="">-- Chọn danh mục --</option>
-
+            <div class="form-group-modern">
+                <label><i class="bi bi-bookmark"></i> Danh muc</label>
+                <select class="form-input" name="category_id" required>
+                    <option value="">-- Chon danh muc --</option>
                     <?php foreach ($categories as $category) : ?>
                         <option value="<?php echo $category->id; ?>"
                             <?php echo ($category->id == $product->category_id) ? 'selected' : ''; ?>>
@@ -87,14 +61,10 @@
             </div>
         </div>
 
-        <div class="mb-4">
-            <label for="existing_image" class="form-label fw-semibold">
-                <i class="bi bi-images"></i> Chọn ảnh có sẵn trong thư mục uploads
-            </label>
-
-            <select class="form-select form-select-lg rounded-4" id="existing_image" name="existing_image">
-                <option value="">-- Không đổi ảnh --</option>
-
+        <div class="form-group-modern">
+            <label><i class="bi bi-images"></i> Chon anh co san</label>
+            <select class="form-input" name="existing_image">
+                <option value="">-- Khong doi anh --</option>
                 <?php if (!empty($availableImages)) : ?>
                     <?php foreach ($availableImages as $img) : ?>
                         <option value="<?php echo $img; ?>"
@@ -104,44 +74,31 @@
                     <?php endforeach; ?>
                 <?php endif; ?>
             </select>
-
-            <div class="form-text">
-                Danh sách này lấy ảnh từ thư mục public/uploads.
-            </div>
         </div>
 
-        <div class="mb-4">
-            <label for="image" class="form-label fw-semibold">
-                <i class="bi bi-upload"></i> Hoặc tải ảnh mới từ máy
-            </label>
-
-            <input type="file"
-                   class="form-control form-control-lg rounded-4"
-                   id="image"
-                   name="image"
-                   accept="image/*">
-
-            <div class="form-text">
-                Nếu chọn ảnh mới, ảnh mới sẽ được ưu tiên thay cho ảnh có sẵn.
-            </div>
+        <div class="form-group-modern">
+            <label><i class="bi bi-cloud-arrow-up"></i> Hoac tai anh moi</label>
+            <input type="file" class="form-input" name="image" accept="image/*">
+            <div class="form-hint">Neu chon anh moi, anh moi se duoc uu tien.</div>
         </div>
 
         <?php if (!empty($product->image)) : ?>
-            <div class="mb-4">
-                <p class="text-white-50 mb-2">Ảnh hiện tại:</p>
-                <img src="<?php echo url($product->image); ?>"
-                     class="product-img"
-                     alt="Ảnh sản phẩm">
+            <div class="form-group-modern">
+                <label>Anh hien tai:</label>
+                <div style="margin-top: 0.5rem;">
+                    <img src="<?php echo url($product->image); ?>"
+                         style="width: 120px; height: 90px; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--border);"
+                         alt="Anh san pham">
+                </div>
             </div>
         <?php endif; ?>
 
-        <div class="d-flex flex-wrap gap-3">
-            <button type="submit" class="btn btn-neon btn-lg rounded-pill px-5">
-                <i class="bi bi-check2-circle"></i> Cập nhật
+        <div class="d-flex gap-3 mt-4">
+            <button type="submit" class="btn-primary-custom">
+                <i class="bi bi-check-lg"></i> Cap nhat
             </button>
-
-            <a href="<?php echo url('Product'); ?>" class="btn btn-outline-light btn-lg rounded-pill px-5">
-                Hủy
+            <a href="<?php echo url('Product'); ?>" class="btn-secondary-custom">
+                Huy bo
             </a>
         </div>
     </form>

@@ -1,21 +1,23 @@
 <?php include 'app/views/shares/header.php'; ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<!-- Page Header -->
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3">
     <div>
-        <h1 class="fw-bold page-title">Thêm danh mục</h1>
-        <p class="text-white-50 mb-0">Tạo danh mục sản phẩm mới.</p>
+        <h1>Them danh muc moi</h1>
+        <p>Tao danh muc de phan loai san pham</p>
     </div>
 
-    <a href="<?php echo url('Category'); ?>" class="btn btn-outline-light rounded-pill px-4">
-        <i class="bi bi-arrow-left"></i> Quay lại
+    <a href="<?php echo url('Category'); ?>" class="btn-secondary-custom">
+        <i class="bi bi-arrow-left"></i> Quay lai danh sach
     </a>
 </div>
 
-<div class="main-card p-4 p-lg-5">
+<!-- Form -->
+<div class="form-modern" style="max-width: 700px;">
     <?php if (!empty($errors)) : ?>
-        <div class="alert alert-danger rounded-4">
-            <strong>Có lỗi xảy ra:</strong>
-            <ul class="mb-0 mt-2">
+        <div class="alert-modern error">
+            <strong><i class="bi bi-exclamation-triangle"></i> Co loi xay ra:</strong>
+            <ul style="margin: 0.5rem 0 0 1.2rem; padding: 0;">
                 <?php foreach ($errors as $error) : ?>
                     <li><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></li>
                 <?php endforeach; ?>
@@ -24,36 +26,26 @@
     <?php endif; ?>
 
     <form method="POST" action="<?php echo url('Category/save'); ?>">
-        <div class="mb-4">
-            <label for="name" class="form-label fw-semibold">
-                <i class="bi bi-tag"></i> Tên danh mục
-            </label>
-            <input type="text"
-                   class="form-control form-control-lg rounded-4"
-                   id="name"
-                   name="name"
-                   placeholder="Ví dụ: Laptop"
-                   required>
+
+        <div class="form-group-modern">
+            <label><i class="bi bi-type"></i> Ten danh muc</label>
+            <input type="text" class="form-input" name="name"
+                   placeholder="Vi du: Dien thoai, Laptop, Phu kien..." required>
+            <div class="form-hint">Ten danh muc toi da 100 ky tu.</div>
         </div>
 
-        <div class="mb-4">
-            <label for="description" class="form-label fw-semibold">
-                <i class="bi bi-card-text"></i> Mô tả
-            </label>
-            <textarea class="form-control rounded-4"
-                      id="description"
-                      name="description"
-                      rows="5"
-                      placeholder="Nhập mô tả danh mục"></textarea>
+        <div class="form-group-modern">
+            <label><i class="bi bi-text-paragraph"></i> Mo ta</label>
+            <textarea class="form-input" name="description" rows="4"
+                      placeholder="Nhap mo ta ngan ve danh muc nay"></textarea>
         </div>
 
-        <div class="d-flex flex-wrap gap-3">
-            <button type="submit" class="btn btn-neon btn-lg rounded-pill px-5">
-                <i class="bi bi-save"></i> Lưu danh mục
+        <div class="d-flex gap-3 mt-4">
+            <button type="submit" class="btn-primary-custom">
+                <i class="bi bi-check-lg"></i> Luu danh muc
             </button>
-
-            <a href="<?php echo url('Category'); ?>" class="btn btn-outline-light btn-lg rounded-pill px-5">
-                Hủy
+            <a href="<?php echo url('Category'); ?>" class="btn-secondary-custom">
+                Huy bo
             </a>
         </div>
     </form>

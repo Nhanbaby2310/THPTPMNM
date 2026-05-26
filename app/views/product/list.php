@@ -1,135 +1,111 @@
 <?php include 'app/views/shares/header.php'; ?>
 
-<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+<!-- Page Header -->
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3">
     <div>
-        <h1 class="fw-bold page-title">Danh sách sản phẩm</h1>
-        <p class="text-white-50 mb-0">Dữ liệu được lấy từ bảng product và category trong MySQL.</p>
+        <h1>San pham</h1>
+        <p>Danh sach tat ca san pham trong he thong</p>
     </div>
 
-    <a href="<?php echo url('Product/add'); ?>" class="btn btn-neon rounded-pill px-4">
-        <i class="bi bi-plus-lg"></i> Thêm sản phẩm
+    <a href="<?php echo url('Product/add'); ?>" class="btn-primary-custom">
+        <i class="bi bi-plus-lg"></i> Them san pham moi
     </a>
 </div>
 
+<!-- Stats -->
 <div class="row g-4 mb-4">
     <div class="col-md-4">
-        <div class="stat-card">
-            <p class="mb-1">Tổng sản phẩm</p>
-            <h2 class="fw-bold mb-0"><?php echo count($products); ?></h2>
+        <div class="stat-box">
+            <div class="stat-icon purple">
+                <i class="bi bi-box-seam"></i>
+            </div>
+            <div class="stat-info">
+                <h3><?php echo count($products); ?></h3>
+                <span>Tong san pham</span>
+            </div>
         </div>
     </div>
-
     <div class="col-md-4">
-        <div class="stat-card">
-            <p class="mb-1">Database</p>
-            <h2 class="fw-bold mb-0">my_store</h2>
+        <div class="stat-box">
+            <div class="stat-icon orange">
+                <i class="bi bi-database"></i>
+            </div>
+            <div class="stat-info">
+                <h3>my_store</h3>
+                <span>Co so du lieu</span>
+            </div>
         </div>
     </div>
-
     <div class="col-md-4">
-        <div class="stat-card">
-            <p class="mb-1">Bài thực hành</p>
-            <h2 class="fw-bold mb-0">Bài 2</h2>
+        <div class="stat-box">
+            <div class="stat-icon green">
+                <i class="bi bi-check-circle"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Active</h3>
+                <span>Trang thai he thong</span>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- Product Grid -->
 <?php if (empty($products)) : ?>
-    <div class="main-card p-5 text-center">
-        <div class="display-1 mb-3" style="color: var(--primary-light);">
+    <div class="card-modern">
+        <div class="empty-state">
             <i class="bi bi-inbox"></i>
+            <h3>Chua co san pham nao</h3>
+            <p>Hay them san pham dau tien de bat dau quan ly cua hang.</p>
+            <a href="<?php echo url('Product/add'); ?>" class="btn-primary-custom">
+                <i class="bi bi-plus-circle"></i> Them san pham
+            </a>
         </div>
-
-        <h3 class="fw-bold">Chưa có sản phẩm</h3>
-        <p class="text-white-50">Hãy thêm sản phẩm mới để kiểm tra chức năng CRUD.</p>
-
-        <a href="<?php echo url('Product/add'); ?>" class="btn btn-neon rounded-pill px-5">
-            <i class="bi bi-plus-circle"></i> Thêm sản phẩm mới
-        </a>
     </div>
 <?php else : ?>
-    <div class="main-card">
-        <div class="p-4 border-bottom" style="border-color: var(--border-color) !important;">
-            <h4 class="fw-bold mb-0">
-                <i class="bi bi-list-check" style="color: var(--primary);"></i> Bảng sản phẩm
-            </h4>
-        </div>
+    <div class="product-grid">
+        <?php foreach ($products as $product) : ?>
+            <div class="product-card">
+                <?php if (!empty($product->image)) : ?>
+                    <img src="<?php echo url($product->image); ?>" class="product-card-img" alt="<?php echo htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8'); ?>">
+                <?php else : ?>
+                    <div class="product-card-img-placeholder">
+                        <i class="bi bi-image"></i>
+                    </div>
+                <?php endif; ?>
 
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Hình ảnh</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Danh mục</th>
-                        <th>Giá</th>
-                        <th class="text-center">Thao tác</th>
-                    </tr>
-                </thead>
+                <div class="product-card-body">
+                    <div class="product-card-title">
+                        <?php echo htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8'); ?>
+                    </div>
 
-                <tbody>
-                    <?php foreach ($products as $product) : ?>
-                        <tr>
-                            <td>
-                                <span class="badge bg-secondary rounded-pill">
-                                    #<?php echo htmlspecialchars($product->id, ENT_QUOTES, 'UTF-8'); ?>
-                                </span>
-                            </td>
+                    <div class="product-card-desc">
+                        <?php echo htmlspecialchars(mb_strimwidth($product->description, 0, 80, '...'), ENT_QUOTES, 'UTF-8'); ?>
+                    </div>
 
-                            <td>
-                                <?php if (!empty($product->image)) : ?>
-                                    <img src="<?php echo url($product->image); ?>" class="product-img" alt="Ảnh sản phẩm">
-                                <?php else : ?>
-                                    <div class="empty-img">
-                                        <i class="bi bi-image"></i>
-                                    </div>
-                                <?php endif; ?>
-                            </td>
+                    <div class="product-card-footer">
+                        <span class="product-price">
+                            <?php echo number_format($product->price, 0, ',', '.'); ?> VND
+                        </span>
+                        <span class="product-category-badge">
+                            <?php echo htmlspecialchars($product->category_name ?? 'Chua phan loai', ENT_QUOTES, 'UTF-8'); ?>
+                        </span>
+                    </div>
+                </div>
 
-                            <td>
-                                <div class="fw-bold" style="color: var(--primary);">
-                                    <?php echo htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <small class="text-white-50">
-                                    <?php echo htmlspecialchars(mb_strimwidth($product->description, 0, 60, '...'), ENT_QUOTES, 'UTF-8'); ?>
-                                </small>
-                            </td>
-
-                            <td>
-                                <span class="badge rounded-pill bg-primary">
-                                    <?php echo htmlspecialchars($product->category_name ?? 'Chưa có', ENT_QUOTES, 'UTF-8'); ?>
-                                </span>
-                            </td>
-
-                            <td>
-                                <span class="badge rounded-pill bg-success px-3 py-2">
-                                    <?php echo number_format($product->price, 0, ',', '.'); ?> VNĐ
-                                </span>
-                            </td>
-
-                            <td class="text-center">
-                                <a href="<?php echo url('Product/show/' . $product->id); ?>"
-                                   class="btn btn-info btn-sm rounded-pill px-3">
-                                    <i class="bi bi-eye"></i>
-                                </a>
-
-                                <a href="<?php echo url('Product/edit/' . $product->id); ?>"
-                                   class="btn btn-warning btn-sm rounded-pill px-3">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-
-                                <a href="<?php echo url('Product/delete/' . $product->id); ?>"
-                                   class="btn btn-danger btn-sm rounded-pill px-3"
-                                   onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+                <div class="product-actions">
+                    <a href="<?php echo url('Product/show/' . $product->id); ?>" class="btn-icon view" title="Xem chi tiet">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="<?php echo url('Product/edit/' . $product->id); ?>" class="btn-icon edit" title="Chinh sua">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a href="<?php echo url('Product/delete/' . $product->id); ?>" class="btn-icon delete" title="Xoa"
+                       onclick="return confirm('Ban co chac chan muon xoa san pham nay?');">
+                        <i class="bi bi-trash3"></i>
+                    </a>
+                </div>
+            </div>
+        <?php endforeach; ?>
     </div>
 <?php endif; ?>
 
