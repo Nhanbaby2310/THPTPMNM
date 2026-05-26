@@ -96,6 +96,9 @@
                     <a href="<?php echo url('Product/show/' . $product->id); ?>" class="btn-icon view" title="Xem chi tiet">
                         <i class="bi bi-eye"></i>
                     </a>
+                    <a href="<?php echo url('Product/addToCart/' . $product->id); ?>" class="btn-icon" title="Them vao gio" style="color: var(--primary);">
+                        <i class="bi bi-cart-plus"></i>
+                    </a>
                     <a href="<?php echo url('Product/edit/' . $product->id); ?>" class="btn-icon edit" title="Chinh sua">
                         <i class="bi bi-pencil"></i>
                     </a>
