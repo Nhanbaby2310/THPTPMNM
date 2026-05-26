@@ -105,7 +105,7 @@
                 <?php endif; ?>
             </select>
 
-            <div class="form-text text-white-50">
+            <div class="form-text">
                 Danh sách này lấy ảnh từ thư mục public/uploads.
             </div>
         </div>
@@ -121,7 +121,7 @@
                    name="image"
                    accept="image/*">
 
-            <div class="form-text text-white-50">
+            <div class="form-text">
                 Nếu chọn ảnh mới, ảnh mới sẽ được ưu tiên thay cho ảnh có sẵn.
             </div>
         </div>

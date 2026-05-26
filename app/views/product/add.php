@@ -36,7 +36,7 @@
                    placeholder="Ví dụ: Laptop Hutech 2024"
                    required>
 
-            <div class="form-text text-white-50">
+            <div class="form-text">
                 Tên sản phẩm từ 10 đến 100 ký tự.
             </div>
         </div>
@@ -106,7 +106,7 @@
                 <?php endif; ?>
             </select>
 
-            <div class="form-text text-white-50">
+            <div class="form-text">
                 Danh sách này lấy ảnh từ thư mục public/uploads.
             </div>
         </div>
@@ -122,7 +122,7 @@
                    name="image"
                    accept="image/*">
 
-            <div class="form-text text-white-50">
+            <div class="form-text">
                 Hỗ trợ JPG, PNG, GIF, WEBP. Tối đa 5MB. Nếu chọn ảnh mới, ảnh mới sẽ được ưu tiên.
             </div>
         </div>
