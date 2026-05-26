@@ -1,4 +1,7 @@
 <?php
+// Bài 3: Khởi tạo session để quản lý giỏ hàng
+session_start();
+
 // Front Controller - điều hướng theo mô hình MVC
 
 $scriptName = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));

@@ -31,3 +31,22 @@ INSERT INTO category (name, description) VALUES
 INSERT INTO product (name, description, price, image, category_id) VALUES
 ('Laptop Hutech 2024', 'Laptop dành cho sinh viên Hutech học lập trình PHP MVC', 12300.00, NULL, 2),
 ('Điện thoại Hutech Pro', 'Điện thoại mẫu dùng để kiểm tra chức năng hiển thị sản phẩm', 8500.00, NULL, 1);
+
+-- Bài 3: Giỏ hàng, Đặt hàng, Thanh toán
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    address TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE order_details (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES product(id)
+);

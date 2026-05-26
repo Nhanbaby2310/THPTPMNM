@@ -114,6 +114,11 @@
                                     <i class="bi bi-eye"></i>
                                 </a>
 
+                                <a href="<?php echo url('Product/addToCart/' . $product->id); ?>"
+                                   class="btn btn-primary btn-sm rounded-pill px-3">
+                                    <i class="bi bi-cart-plus"></i>
+                                </a>
+
                                 <a href="<?php echo url('Product/edit/' . $product->id); ?>"
                                    class="btn btn-warning btn-sm rounded-pill px-3">
                                     <i class="bi bi-pencil-square"></i>
