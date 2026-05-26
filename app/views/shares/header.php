@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShopManager - Quản lý cửa hàng</title>
+    <title>Web bán hàng Nhân</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
@@ -14,14 +14,14 @@
 
 <!-- Top Navigation Bar -->
 <header class="top-navbar">
-    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <div class="d-flex align-items-center justify-content-between">
         <a href="<?php echo url(''); ?>" class="navbar-brand">
-            <i class="bi bi-lightning-charge-fill"></i> ShopManager
+            <i class="bi bi-lightning-charge-fill"></i> Web bán hàng Nhân
         </a>
 
         <nav>
             <ul class="navbar-nav">
-                <li><a href="<?php echo url(''); ?>" class="nav-link"><i class="bi bi-grid-1x2"></i> Dashboard</a></li>
+                <li><a href="<?php echo url(''); ?>" class="nav-link"><i class="bi bi-house"></i> Trang chu</a></li>
                 <li><a href="<?php echo url('Product'); ?>" class="nav-link"><i class="bi bi-bag"></i> San pham</a></li>
                 <li><a href="<?php echo url('Product/add'); ?>" class="nav-link"><i class="bi bi-plus-square"></i> Them SP</a></li>
                 <li>
