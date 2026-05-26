@@ -158,8 +158,14 @@ class ProductModel
 
     public function deleteProduct($id)
     {
-        $query = "DELETE FROM " . $this->table_name . " WHERE id = :id";
+        // Xóa order_details liên quan trước (tránh lỗi foreign key)
+        $query = "DELETE FROM order_details WHERE product_id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
 
+        // Xóa sản phẩm
+        $query = "DELETE FROM " . $this->table_name . " WHERE id = :id";
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
 
