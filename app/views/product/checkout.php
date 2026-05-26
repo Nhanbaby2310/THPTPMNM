@@ -35,6 +35,33 @@
                     <textarea class="form-input" name="address" rows="3" placeholder="Nhap dia chi giao hang chi tiet" required></textarea>
                 </div>
 
+                <!-- Phuong thuc thanh toan -->
+                <div class="form-group-modern">
+                    <label><i class="bi bi-credit-card"></i> Phuong thuc thanh toan</label>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="cod" checked>
+                            <div class="payment-option-content">
+                                <i class="bi bi-truck" style="font-size: 1.3rem; color: var(--success);"></i>
+                                <div>
+                                    <strong>Thanh toan khi nhan hang (COD)</strong>
+                                    <p style="margin:0; font-size: 0.8rem; color: var(--text-muted);">Tra tien mat khi nhan duoc hang</p>
+                                </div>
+                            </div>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="vnpay">
+                            <div class="payment-option-content">
+                                <i class="bi bi-bank" style="font-size: 1.3rem; color: var(--primary);"></i>
+                                <div>
+                                    <strong>Thanh toan qua VNPay</strong>
+                                    <p style="margin:0; font-size: 0.8rem; color: var(--text-muted);">ATM / Visa / MasterCard / QR Code</p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
                 <div class="d-flex gap-3 mt-4">
                     <button type="submit" class="btn-primary-custom">
                         <i class="bi bi-check-circle"></i> Xac nhan dat hang

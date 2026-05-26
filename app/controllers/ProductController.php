@@ -276,20 +276,31 @@ class ProductController
             $name = $_POST['name'] ?? '';
             $phone = $_POST['phone'] ?? '';
             $address = $_POST['address'] ?? '';
+            $payment_method = $_POST['payment_method'] ?? 'cod';
 
             if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
                 echo "Giỏ hàng trống.";
                 return;
             }
 
+            // Tính tổng tiền
+            $total = 0;
+            foreach ($_SESSION['cart'] as $item) {
+                $total += $item['price'] * $item['quantity'];
+            }
+
+            // Lưu đơn hàng vào database
             $this->db->beginTransaction();
 
             try {
-                $query = "INSERT INTO orders (name, phone, address) VALUES (:name, :phone, :address)";
+                $query = "INSERT INTO orders (name, phone, address, payment_method, payment_status) VALUES (:name, :phone, :address, :payment_method, :payment_status)";
                 $stmt = $this->db->prepare($query);
+                $payment_status = ($payment_method == 'vnpay') ? 'pending' : 'cod';
                 $stmt->bindParam(':name', $name);
                 $stmt->bindParam(':phone', $phone);
                 $stmt->bindParam(':address', $address);
+                $stmt->bindParam(':payment_method', $payment_method);
+                $stmt->bindParam(':payment_status', $payment_status);
                 $stmt->execute();
                 $order_id = $this->db->lastInsertId();
 
@@ -304,15 +315,153 @@ class ProductController
                     $stmt->execute();
                 }
 
-                unset($_SESSION['cart']);
                 $this->db->commit();
 
+                // Nếu chọn VNPay -> redirect sang cổng thanh toán VNPay
+                if ($payment_method == 'vnpay') {
+                    $_SESSION['pending_order_id'] = $order_id;
+                    $this->createVnpayPayment($order_id, $total);
+                    return;
+                }
+
+                // COD: xóa giỏ hàng và chuyển trang xác nhận
+                unset($_SESSION['cart']);
                 header('Location: ' . url('Product/orderConfirmation'));
                 exit();
             } catch (Exception $e) {
                 $this->db->rollBack();
                 echo "Đã xảy ra lỗi khi xử lý đơn hàng: " . $e->getMessage();
             }
+        }
+    }
+
+    // ===== VNPAY PAYMENT =====
+
+    private function createVnpayPayment($order_id, $total)
+    {
+        require_once 'app/config/vnpay_config.php';
+
+        $vnp_TmnCode = VNPAY_TMN_CODE;
+        $vnp_HashSecret = VNPAY_HASH_SECRET;
+        $vnp_Url = VNPAY_URL;
+
+        // Xây dựng Return URL động
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'];
+        $vnp_ReturnUrl = $protocol . '://' . $host . url('Product/vnpayReturn');
+
+        $vnp_TxnRef = $order_id . '_' . time();
+        $vnp_OrderInfo = 'Thanh toan don hang #' . $order_id;
+        $vnp_Amount = $total * 100; // VNPay yêu cầu nhân 100
+
+        $inputData = array(
+            "vnp_Version" => VNPAY_VERSION,
+            "vnp_TmnCode" => $vnp_TmnCode,
+            "vnp_Amount" => $vnp_Amount,
+            "vnp_Command" => VNPAY_COMMAND,
+            "vnp_CreateDate" => date('YmdHis'),
+            "vnp_CurrCode" => VNPAY_CURR_CODE,
+            "vnp_IpAddr" => $this->getClientIp(),
+            "vnp_Locale" => VNPAY_LOCALE,
+            "vnp_OrderInfo" => $vnp_OrderInfo,
+            "vnp_OrderType" => VNPAY_ORDER_TYPE,
+            "vnp_ReturnUrl" => $vnp_ReturnUrl,
+            "vnp_TxnRef" => $vnp_TxnRef,
+        );
+
+        ksort($inputData);
+        $query = "";
+        $i = 0;
+        $hashdata = "";
+        foreach ($inputData as $key => $value) {
+            if ($i == 1) {
+                $hashdata .= '&' . urlencode($key) . "=" . urlencode($value);
+            } else {
+                $hashdata .= urlencode($key) . "=" . urlencode($value);
+                $i = 1;
+            }
+            $query .= urlencode($key) . "=" . urlencode($value) . '&';
+        }
+
+        $vnpSecureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
+        $vnp_Url = $vnp_Url . "?" . $query . 'vnp_SecureHash=' . $vnpSecureHash;
+
+        header('Location: ' . $vnp_Url);
+        exit();
+    }
+
+    public function vnpayReturn()
+    {
+        require_once 'app/config/vnpay_config.php';
+
+        $vnp_HashSecret = VNPAY_HASH_SECRET;
+        $inputData = array();
+        $vnp_SecureHash = $_GET['vnp_SecureHash'] ?? '';
+
+        foreach ($_GET as $key => $value) {
+            if (substr($key, 0, 4) == "vnp_") {
+                $inputData[$key] = $value;
+            }
+        }
+        unset($inputData['vnp_SecureHash']);
+        unset($inputData['vnp_SecureHashType']);
+
+        ksort($inputData);
+        $hashData = "";
+        $i = 0;
+        foreach ($inputData as $key => $value) {
+            if ($i == 1) {
+                $hashData .= '&' . urlencode($key) . "=" . urlencode($value);
+            } else {
+                $hashData .= urlencode($key) . "=" . urlencode($value);
+                $i = 1;
+            }
+        }
+
+        $secureHash = hash_hmac('sha512', $hashData, $vnp_HashSecret);
+
+        $vnp_ResponseCode = $_GET['vnp_ResponseCode'] ?? '';
+        $vnp_TxnRef = $_GET['vnp_TxnRef'] ?? '';
+
+        // Lấy order_id từ TxnRef (format: orderid_timestamp)
+        $order_id = explode('_', $vnp_TxnRef)[0];
+
+        if ($secureHash == $vnp_SecureHash) {
+            if ($vnp_ResponseCode == '00') {
+                // Thanh toán thành công
+                $query = "UPDATE orders SET payment_status = 'paid' WHERE id = :id";
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(':id', $order_id);
+                $stmt->execute();
+
+                // Xóa giỏ hàng
+                unset($_SESSION['cart']);
+                unset($_SESSION['pending_order_id']);
+
+                $payment_success = true;
+                $message = "Thanh toan thanh cong! Don hang #$order_id da duoc xac nhan.";
+            } else {
+                // Thanh toán thất bại
+                $payment_success = false;
+                $message = "Thanh toan that bai. Ma loi: $vnp_ResponseCode";
+            }
+        } else {
+            // Chữ ký không hợp lệ
+            $payment_success = false;
+            $message = "Chu ky khong hop le. Giao dich bi nghi ngo gia mao.";
+        }
+
+        include 'app/views/product/vnpay_return.php';
+    }
+
+    private function getClientIp()
+    {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            return $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            return $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
         }
     }
 

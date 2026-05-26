@@ -732,3 +732,38 @@ body {
 .card-modern, .stat-box, .product-card, .form-modern, .detail-info {
     animation: fadeIn 0.4s ease forwards;
 }
+
+
+
+/* ===== PAYMENT OPTIONS ===== */
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.payment-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+    flex-shrink: 0;
+}
+
+.payment-option-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    flex: 1;
+    transition: var(--transition);
+}
+
+.payment-option input[type="radio"]:checked + .payment-option-content {
+    border-color: var(--primary);
+    background: #eef2ff;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}

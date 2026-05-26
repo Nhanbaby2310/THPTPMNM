@@ -38,6 +38,8 @@ CREATE TABLE orders (
     name VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     address TEXT NOT NULL,
+    payment_method VARCHAR(20) DEFAULT 'cod',
+    payment_status VARCHAR(20) DEFAULT 'cod',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

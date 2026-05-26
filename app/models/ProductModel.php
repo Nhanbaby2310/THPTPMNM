@@ -1,17 +1,32 @@
 <?php
 
+require_once 'app/config/redis.php';
+
 class ProductModel
 {
     private $conn;
     private $table_name = "product";
+    private $cache;
+
+    // Cache keys
+    const CACHE_ALL_PRODUCTS = 'products:all';
+    const CACHE_PRODUCT_PREFIX = 'products:item:';
 
     public function __construct($db)
     {
         $this->conn = $db;
+        $this->cache = RedisCache::getInstance();
     }
 
     public function getProducts()
     {
+        // Thử lấy từ Redis cache trước
+        $cached = $this->cache->get(self::CACHE_ALL_PRODUCTS);
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        // Không có cache -> truy vấn database
         $query = "SELECT p.id, p.name, p.description, p.price, p.image, c.name AS category_name
                   FROM " . $this->table_name . " p
                   LEFT JOIN category c ON p.category_id = c.id
@@ -20,11 +35,23 @@ class ProductModel
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_OBJ);
+        $products = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        // Lưu vào Redis cache (5 phút)
+        $this->cache->set(self::CACHE_ALL_PRODUCTS, $products);
+
+        return $products;
     }
 
     public function getProductById($id)
     {
+        // Thử lấy từ cache
+        $cacheKey = self::CACHE_PRODUCT_PREFIX . $id;
+        $cached = $this->cache->get($cacheKey);
+        if ($cached !== null) {
+            return $cached;
+        }
+
         $query = "SELECT p.*, c.name AS category_name
                   FROM " . $this->table_name . " p
                   LEFT JOIN category c ON p.category_id = c.id
@@ -34,7 +61,14 @@ class ProductModel
         $stmt->bindParam(':id', $id);
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_OBJ);
+        $product = $stmt->fetch(PDO::FETCH_OBJ);
+
+        // Lưu vào cache (5 phút)
+        if ($product) {
+            $this->cache->set($cacheKey, $product);
+        }
+
+        return $product;
     }
 
     public function addProduct($name, $description, $price, $category_id, $image = "")
@@ -63,7 +97,14 @@ class ProductModel
         $stmt->bindParam(':image', $image);
         $stmt->bindParam(':category_id', $category_id);
 
-        return $stmt->execute() ? true : false;
+        $result = $stmt->execute();
+
+        // Xóa cache khi thêm sản phẩm mới
+        if ($result) {
+            $this->clearProductCache();
+        }
+
+        return $result ? true : false;
     }
 
     public function updateProduct($id, $name, $description, $price, $category_id, $image = null)
@@ -104,7 +145,15 @@ class ProductModel
             $stmt->bindParam(':image', $image);
         }
 
-        return $stmt->execute() ? true : false;
+        $result = $stmt->execute();
+
+        // Xóa cache khi cập nhật sản phẩm
+        if ($result) {
+            $this->clearProductCache();
+            $this->cache->delete(self::CACHE_PRODUCT_PREFIX . $id);
+        }
+
+        return $result ? true : false;
     }
 
     public function deleteProduct($id)
@@ -114,7 +163,24 @@ class ProductModel
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
 
-        return $stmt->execute() ? true : false;
+        $result = $stmt->execute();
+
+        // Xóa cache khi xóa sản phẩm
+        if ($result) {
+            $this->clearProductCache();
+            $this->cache->delete(self::CACHE_PRODUCT_PREFIX . $id);
+        }
+
+        return $result ? true : false;
+    }
+
+    /**
+     * Xóa tất cả cache liên quan đến sản phẩm
+     */
+    private function clearProductCache()
+    {
+        $this->cache->delete(self::CACHE_ALL_PRODUCTS);
+        $this->cache->deleteByPrefix(self::CACHE_PRODUCT_PREFIX);
     }
 
     private function validateProduct($name, $description, $price, $category_id)
