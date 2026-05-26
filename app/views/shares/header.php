@@ -12,44 +12,40 @@
 </head>
 
 <body>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3 col-lg-2 sidebar">
-            <div class="mb-4">
-                <h3 class="brand mb-1">
-                    <i class="bi bi-shop-window"></i> COS340
-                </h3>
-                <p class="brand-sub mb-0">PHP MVC + MySQL</p>
-            </div>
 
-            <nav>
-                <a href="<?php echo url(''); ?>" class="nav-btn">
-                    <i class="bi bi-house-door"></i> Trang chủ
-                </a>
+<!-- Top Navbar -->
+<nav class="top-nav">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+        <a href="<?php echo url(''); ?>" class="nav-brand">
+            <i class="bi bi-shop-window"></i> COS340
+        </a>
 
-                <a href="<?php echo url('Product'); ?>" class="nav-btn">
-                    <i class="bi bi-box-seam"></i> Sản phẩm
-                </a>
-
-                <a href="<?php echo url('Product/add'); ?>" class="nav-btn">
-                    <i class="bi bi-plus-circle"></i> Thêm sản phẩm
-                </a>
-
-                <a href="<?php echo url('Product/cart'); ?>" class="nav-btn">
-                    <i class="bi bi-cart3"></i> Giỏ hàng
-                    <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
-                        <span class="badge bg-danger rounded-pill ms-auto"><?php echo count($_SESSION['cart']); ?></span>
-                    <?php endif; ?>
-                </a>
-
-                <a href="<?php echo url('Category'); ?>" class="nav-btn">
-                    <i class="bi bi-tags"></i> Danh mục
-                </a>
-
-                <a href="<?php echo url('Category/add'); ?>" class="nav-btn">
-                    <i class="bi bi-folder-plus"></i> Thêm danh mục
-                </a>
-            </nav>
+        <div class="nav-links">
+            <a href="<?php echo url(''); ?>" class="nav-item">
+                <i class="bi bi-house-door"></i> Trang chủ
+            </a>
+            <a href="<?php echo url('Product'); ?>" class="nav-item">
+                <i class="bi bi-box-seam"></i> Sản phẩm
+            </a>
+            <a href="<?php echo url('Product/add'); ?>" class="nav-item">
+                <i class="bi bi-plus-circle"></i> Thêm sản phẩm
+            </a>
+            <a href="<?php echo url('Product/cart'); ?>" class="nav-item">
+                <i class="bi bi-cart3"></i> Giỏ hàng
+                <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+                    <span class="badge bg-danger rounded-pill"><?php echo count($_SESSION['cart']); ?></span>
+                <?php endif; ?>
+            </a>
+            <a href="<?php echo url('Category'); ?>" class="nav-item">
+                <i class="bi bi-tags"></i> Danh mục
+            </a>
+            <a href="<?php echo url('Category/add'); ?>" class="nav-item">
+                <i class="bi bi-folder-plus"></i> Thêm danh mục
+            </a>
         </div>
+    </div>
+</nav>
 
-        <main class="col-md-9 col-lg-10 p-4 p-lg-5">
+<!-- Main Content -->
+<main class="main-content">
+    <div class="container-fluid px-4 px-lg-5 py-4">
