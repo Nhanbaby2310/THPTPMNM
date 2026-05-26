@@ -35,6 +35,13 @@
                     <i class="bi bi-plus-circle"></i> Thêm sản phẩm
                 </a>
 
+                <a href="<?php echo url('Product/cart'); ?>" class="nav-btn">
+                    <i class="bi bi-cart3"></i> Giỏ hàng
+                    <?php if (isset($_SESSION['cart']) && count($_SESSION['cart']) > 0): ?>
+                        <span class="badge bg-danger rounded-pill ms-auto"><?php echo count($_SESSION['cart']); ?></span>
+                    <?php endif; ?>
+                </a>
+
                 <a href="<?php echo url('Category'); ?>" class="nav-btn">
                     <i class="bi bi-tags"></i> Danh mục
                 </a>
