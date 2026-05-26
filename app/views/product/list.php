@@ -14,21 +14,21 @@
 <div class="row g-4 mb-4">
     <div class="col-md-4">
         <div class="stat-card">
-            <p class="text-white-50 mb-1">Tổng sản phẩm</p>
+            <p class="mb-1">Tổng sản phẩm</p>
             <h2 class="fw-bold mb-0"><?php echo count($products); ?></h2>
         </div>
     </div>
 
     <div class="col-md-4">
         <div class="stat-card">
-            <p class="text-white-50 mb-1">Database</p>
+            <p class="mb-1">Database</p>
             <h2 class="fw-bold mb-0">my_store</h2>
         </div>
     </div>
 
     <div class="col-md-4">
         <div class="stat-card">
-            <p class="text-white-50 mb-1">Bài thực hành</p>
+            <p class="mb-1">Bài thực hành</p>
             <h2 class="fw-bold mb-0">Bài 2</h2>
         </div>
     </div>
@@ -36,7 +36,7 @@
 
 <?php if (empty($products)) : ?>
     <div class="main-card p-5 text-center">
-        <div class="display-1 text-info mb-3">
+        <div class="display-1 mb-3" style="color: var(--primary-light);">
             <i class="bi bi-inbox"></i>
         </div>
 
@@ -49,9 +49,9 @@
     </div>
 <?php else : ?>
     <div class="main-card">
-        <div class="p-4 border-bottom border-secondary border-opacity-25">
+        <div class="p-4 border-bottom" style="border-color: var(--border-color) !important;">
             <h4 class="fw-bold mb-0">
-                <i class="bi bi-list-check text-info"></i> Bảng sản phẩm
+                <i class="bi bi-list-check" style="color: var(--primary);"></i> Bảng sản phẩm
             </h4>
         </div>
 
@@ -88,7 +88,7 @@
                             </td>
 
                             <td>
-                                <div class="fw-bold text-info">
+                                <div class="fw-bold" style="color: var(--primary);">
                                     <?php echo htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8'); ?>
                                 </div>
                                 <small class="text-white-50">

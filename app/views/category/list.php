@@ -12,9 +12,9 @@
 </div>
 
 <div class="main-card">
-    <div class="p-4 border-bottom border-secondary border-opacity-25">
+    <div class="p-4 border-bottom" style="border-color: var(--border-color) !important;">
         <h4 class="fw-bold mb-0">
-            <i class="bi bi-tags text-info"></i> Bảng danh mục
+            <i class="bi bi-tags" style="color: var(--primary);"></i> Bảng danh mục
         </h4>
     </div>
 
@@ -38,7 +38,7 @@
                             </span>
                         </td>
 
-                        <td class="fw-bold text-info">
+                        <td class="fw-bold" style="color: var(--primary);">
                             <?php echo htmlspecialchars($category->name, ENT_QUOTES, 'UTF-8'); ?>
                         </td>
 
