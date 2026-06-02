@@ -3,6 +3,7 @@
 require_once 'app/config/database.php';
 require_once 'app/models/ProductModel.php';
 require_once 'app/models/CategoryModel.php';
+require_once 'app/helpers/SessionHelper.php';
 
 class ProductController
 {
@@ -18,6 +19,27 @@ class ProductController
         }
 
         $this->productModel = new ProductModel($this->db);
+    }
+
+    private function requireAdmin()
+    {
+        if (!SessionHelper::isAdmin()) {
+            include 'app/views/shares/header.php';
+
+            echo '
+            <div class="container mt-5">
+                <div class="alert alert-danger text-center shadow-sm">
+                    <h4><i class="bi bi-shield-lock"></i> Không có quyền truy cập</h4>
+                    <p>Bạn không có quyền thực hiện chức năng này. Chỉ tài khoản admin mới được thêm, sửa hoặc xóa sản phẩm.</p>
+                    <a href="' . url('Product') . '" class="btn btn-primary mt-2">
+                        Quay lại danh sách sản phẩm
+                    </a>
+                </div>
+            </div>';
+
+            include 'app/views/shares/footer.php';
+            exit;
+        }
     }
 
     public function index()
@@ -45,6 +67,8 @@ class ProductController
 
     public function add()
     {
+        $this->requireAdmin();
+
         $categories = (new CategoryModel($this->db))->getCategories();
         $availableImages = $this->getAvailableImages();
 
@@ -53,6 +77,8 @@ class ProductController
 
     public function save()
     {
+        $this->requireAdmin();
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $name = $_POST['name'] ?? '';
             $description = $_POST['description'] ?? '';
@@ -88,6 +114,8 @@ class ProductController
 
     public function edit($id)
     {
+        $this->requireAdmin();
+
         $product = $this->productModel->getProductById($id);
         $categories = (new CategoryModel($this->db))->getCategories();
         $availableImages = $this->getAvailableImages();
@@ -101,6 +129,8 @@ class ProductController
 
     public function update()
     {
+        $this->requireAdmin();
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $id = $_POST['id'] ?? '';
             $name = $_POST['name'] ?? '';
@@ -138,6 +168,8 @@ class ProductController
 
     public function delete($id)
     {
+        $this->requireAdmin();
+
         if ($this->productModel->deleteProduct($id)) {
             header('Location: ' . url('Product'));
             exit();
